@@ -1,7 +1,7 @@
 {
-  "name": "lm-weather",
+  "name": "stops-api",
   "version": "0.0.1",
-  "description": "Sample weather OWM API wrapper",
+  "description": "Tentative at using a SOAP client library",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
