@@ -1,8 +1,11 @@
 var express = require('express');
 var rest = require('restler');
 var soap = require('soap');
-var url = 'http://193.239.192.237:8040/services/getStops?wsdl';
 var parser = require('xml2json');
+
+var app = express();
+var wsdl = 'http://193.239.192.237:8040/services/getStops?wsdl';
+
 var args = {
   Mode : 'Geo',
   Key: 'kGjGDgCWCUijXyExmQVvQ',
@@ -12,20 +15,14 @@ var args = {
   Lng: '3.876907',
   Perimeter: '100'
 };
-soap.createClient(url, function(err, client) {
-  client.getStops.getStops.getStops(args, function(err, result) {
-    console.log(result.body);
-  });
 
-}, 'http://193.239.192.237:8040/services/getStops');
-
-var app = express();
-
-app.get('/', function (req, resp) {
-  soap.createClient(url, function(err, client) {
+app.get('/stops/:lat/:lon/:per', function (req, resp) {
+  args.Lat = req.params.lat;
+  args.Lng = req.params.lon;
+  args.Perimeter = req.params.per;
+  soap.createClient(wsdl, function(err, client) {
     client.getStops.getStops.getStops(args, function(err, result) {
-      var json = parser.toJson(result.body);
-      resp.send(Object.keys(json));
+      resp.send(JSON.parse(parser.toJson(result.body))['soap:Envelope']['soap:Body']['tns:getStopsResponse']['Stop']);
     });
   }, 'http://193.239.192.237:8040/services/getStops');
 });
